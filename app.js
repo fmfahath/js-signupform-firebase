@@ -96,7 +96,7 @@ nav_to_login.addEventListener('click', () => {
     document.querySelector('#signup').reset();
 });
 
-//getting signup input
+//signup function
 signup_submit.addEventListener('click', (e) => {
     e.preventDefault();
     signup_submit.style.display = 'none';
@@ -146,3 +146,35 @@ signup_submit.addEventListener('click', (e) => {
         })
 
 });
+
+// signIn function
+login_submit.addEventListener('click', (e) => {
+    e.preventDefault();
+    login_submit.style.display = 'none';
+    document.querySelectorAll('.loader')[0].style.display = "block";
+
+    const email = document.getElementById('login-email').value;
+    const password = document.getElementById('login-pwd').value;
+
+    signInWithEmailAndPassword(auth, email, password)
+        .then((userCredencial) => {
+            showAlert(loginMessage, "Logged In", "success");
+            const user = userCredencial.user;
+            localStorage.setItem('LoggedInUserId', user.uid);
+            loginForm.style.display = "none";
+            details.style.display = "block";
+        })
+        .catch((error) => {
+            const erroCode = error.code;
+            if (erroCode === 'auth/invalid-credential')
+                showAlert(loginMessage, "Incorrect Email or Password", "error")
+            else {
+                showAlert(loginMessage, "Account Doesn't Exist", "error")
+
+            }
+
+            login_submit.style.display = 'block';
+            document.querySelectorAll('.loader')[0].style.display = "none";
+        })
+
+})
