@@ -29,6 +29,7 @@ const signupMessage = document.getElementById("signup-message");
 const loginMessage = document.getElementById("login-message");
 const detailsMessage = document.getElementById("details-message");
 const userInfo = document.getElementById("user-info");
+const logoutBtn = document.getElementById("logout-btn");
 
 const userDetails = (currentUser) => {
     console.log(JSON.parse(currentUser));
@@ -165,9 +166,12 @@ login_submit.addEventListener('click', (e) => {
 
     signInWithEmailAndPassword(auth, email, password)
         .then((userCredencial) => {
-            showAlert(loginMessage, "Logged In", "success");
+            // showAlert(loginMessage, "Logged In", "success");
             const user = userCredencial.user;
             localStorage.setItem('LoggedInUserId', user.uid);
+            document.querySelectorAll('.loader')[0].style.display = "none";
+            document.getElementById('login').reset();
+            login_submit.style.display = 'block';
             loginForm.style.display = "none";
             details.style.display = "flex";
         })
@@ -215,3 +219,16 @@ login_submit.addEventListener('click', (e) => {
 })
 
 
+//logout button
+logoutBtn.addEventListener('click', (e) => {
+    localStorage.removeItem("loggedInUserId");
+    signOut(auth)
+        .then(() => {
+            details.style.display = "none";
+            loginForm.style.display = "block";
+        })
+        .catch((error) => {
+            console.log(error.code)
+            showAlert(detailsMessage, "Log out Error", "error", false)
+        })
+})
