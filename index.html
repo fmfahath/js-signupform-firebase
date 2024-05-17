@@ -9,9 +9,64 @@
 </head>
 
 <body>
-    <h1>Hello</h1>
+    <!-- login form -->
+    <div class="login-signup">
+        <h2>Login</h2>
+        <form action="" id="login">
+            <div class="user-box">
+                <input type="email" id="login-email" autocomplete="off">
+                <label for="login-email">Email</label>
+            </div>
+            <div class="user-box">
+                <input type="password" id="login-pwd" autocomplete="off">
+                <label for="login-pwd">Password</label>
+            </div>
+            <div class="forgot-pwd">
+                <h4>Forgot Password?
+                    <span id="nav-to-reset">Click Here</span>
+                </h4>
+            </div>
+            <div class="btn">
+                <button type="submit" id="login-submit">Login</button>
+                <div class="loader"></div>
+            </div>
+            <h4>Create Account?
+                <span id="nav-to-signup">Click Here</span>
+            </h4>
+        </form>
+    </div>
 
+    <!-- signup form -->
+    <div class="login-signup">
+        <h2>Signup</h2>
+        <form action="" id="signup">
+            <div class="user-box">
+                <input type="text" id="signup-username" autocomplete="off" required>
+                <label for="signup-username">Username</label>
+            </div>
+            <div class="user-box">
+                <input type="email" id="signup-email" autocomplete="off" required>
+                <label for="signup-email">Email</label>
+            </div>
+            <div class="user-box">
+                <input type="password" id="signup-pwd" autocomplete="off" required>
+                <label for="signup-pwd">Password</label>
+            </div>
+            <div class="btn">
+                <button type="submit" id="signup-submit">Signup</button>
+                <div class="loader"></div>
+            </div>
+            <h4>Create Account?
+                <span id="nav-to-signup">Click Here</span>
+            </h4>
+        </form>
+    </div>
 
+    <!-- dashboard -->
+    <div class="user-details">
+        <h1></h1>
+        <button id="logout">Logout</button>
+    </div>
 
 
 
