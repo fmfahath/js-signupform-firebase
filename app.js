@@ -13,7 +13,7 @@ const details = document.querySelector(".user-details");
 
 const userDetails = (currentUser) => {
     console.log(JSON.parse(currentUser));
-}
+};
 
 window.onload = () => {
 
@@ -39,16 +39,31 @@ window.onload = () => {
         loginForm.style.display = 'block';
 
     }
-}
+};
 
+// create account link
 nav_to_signup.addEventListener('click', () => {
     loginForm.style.display = 'none';
     signupForm.style.display = 'block';
     document.querySelector('#login').reset();
-})
+});
 
+// already have an account link
 nav_to_login.addEventListener('click', () => {
     loginForm.style.display = 'block';
     signupForm.style.display = 'none';
     document.querySelector('#signup').reset();
-})
+});
+
+//getting signup input
+signup_submit.addEventListener('click', (e) => {
+    e.preventDefault();
+    signup_submit.style.display = 'none';
+    document.querySelectorAll('.loader')[1].style.display = "block";
+
+    const userName = document.getElementById('signup-username').value;
+    const email = document.getElementById('signup-email').value;
+    const password = document.getElementById('signup-pwd').value;
+
+    // console.log(userName, email, password)
+});
