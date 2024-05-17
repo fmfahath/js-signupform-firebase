@@ -1,5 +1,20 @@
-// const auth = firebase.auth();
-// const db = firebase.firestore();
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBrDDXuZrRWzN5DOOWn0v8sACq8-ElWNK0",
+    authDomain: "js-signupform-firebase.firebaseapp.com",
+    projectId: "js-signupform-firebase",
+    storageBucket: "js-signupform-firebase.appspot.com",
+    messagingSenderId: "757117378220",
+    appId: "1:757117378220:web:1d2907b47e89299df18909"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
 
 
 const loginForm = document.querySelectorAll('.login-signup')[0];
@@ -10,10 +25,36 @@ const login_submit = document.querySelector('#login-submit');
 const signup_submit = document.querySelector('#signup-submit');
 const forgotpwd = document.querySelector('#nav-to-forgotpwd');
 const details = document.querySelector(".user-details");
+const signupMessage = document.getElementById("signup-message");
+const loginMessage = document.getElementById("login-message");
 
 const userDetails = (currentUser) => {
     console.log(JSON.parse(currentUser));
 };
+
+function showAlert(element, message, status) {
+    if (status === "success") {
+        element.style.display = "block";
+        element.classList.remove("error")
+        element.classList.add("success")
+        element.innerHTML = message;
+        setTimeout(() => {
+            element.style.display = "none";
+        }, 3000);
+
+    } else {
+        element.style.display = "block";
+        element.classList.remove("success")
+        element.classList.add("error")
+        element.innerHTML = message;
+        setTimeout(() => {
+            element.style.display = "none";
+        }, 3000);
+    }
+
+
+}
+
 
 window.onload = () => {
 
@@ -65,5 +106,43 @@ signup_submit.addEventListener('click', (e) => {
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-pwd').value;
 
-    // console.log(userName, email, password)
+    createUserWithEmailAndPassword(auth, email, password)
+        .then((useCredential) => {
+            const user = useCredential.user;
+            const userData = {
+                userName: userName,
+                email: email,
+            };
+
+
+            showAlert(signupMessage, "Created Successfully", "success");
+
+            const docRef = doc(db, "users", user.uid);
+            setDoc(docRef, userData)
+                .then(() => {
+
+                    signup_submit.style.display = 'block';
+                    document.querySelectorAll('.loader')[1].style.display = "none";
+                    document.getElementById('signup').reset();
+                    signupForm.style.display = 'none';
+                    loginForm.style.display = 'block';
+                })
+                .catch((error) => {
+                    console.log("error writing document", error)
+                })
+        })
+        .catch((error) => {
+
+            const erroCode = error.code;
+            if (erroCode === 'auth/email-already-in-use') {
+                showAlert(signupMessage, "Email Address Already Exists!", "error");
+            }
+            else {
+                showAlert(signupMessage, "Unable to create a user", "error");
+            }
+
+            document.querySelectorAll('.loader')[1].style.display = "none";
+            signup_submit.style.display = 'block';
+        })
+
 });

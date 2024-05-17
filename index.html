@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
     <title>Firebase Authentication</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- <script type="module" src="firebase.js"></script> -->
+    <script type="module" src="app.js"></script>
 </head>
 
 <body>
@@ -35,6 +37,10 @@
                 <span id="nav-to-signup">Click Here</span>
             </h4>
         </form>
+        <div>
+            <p id="login-message" class="success" style="display: none;"></p>
+        </div>
+
     </div>
 
     <!-- signup form -->
@@ -62,6 +68,10 @@
                 <span id="nav-to-login">Click Here</span>
             </h4>
         </form>
+        <div>
+            <p id="signup-message" class="success" style="display: none;"></p>
+        </div>
+
     </div>
 
     <!-- dashboard -->
@@ -73,26 +83,6 @@
 
 
 
-    <!-- <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBrDDXuZrRWzN5DOOWn0v8sACq8-ElWNK0",
-            authDomain: "js-signupform-firebase.firebaseapp.com",
-            projectId: "js-signupform-firebase",
-            storageBucket: "js-signupform-firebase.appspot.com",
-            messagingSenderId: "757117378220",
-            appId: "1:757117378220:web:1d2907b47e89299df18909"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-    </script> -->
-    <script src="app.js"></script>
 </body>
 
 </html>
