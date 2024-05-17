@@ -11,33 +11,35 @@
 <body>
     <!-- login form -->
     <div class="login-signup">
+        <img src="./assets/logo.png" alt="logo">
         <h2>Login</h2>
         <form action="" id="login">
             <div class="user-box">
-                <input type="email" id="login-email" autocomplete="off">
+                <input type="email" id="login-email" autocomplete="off" required>
                 <label for="login-email">Email</label>
             </div>
             <div class="user-box">
-                <input type="password" id="login-pwd" autocomplete="off">
+                <input type="password" id="login-pwd" autocomplete="off" required>
                 <label for="login-pwd">Password</label>
             </div>
             <div class="forgot-pwd">
-                <h4>Forgot Password?
-                    <span id="nav-to-reset">Click Here</span>
+                <h4 id="nav-to-reset">Forgot password?
+                    <!-- <span id="nav-to-reset">Click Here</span> -->
                 </h4>
             </div>
             <div class="btn">
                 <button type="submit" id="login-submit">Login</button>
                 <div class="loader"></div>
             </div>
-            <h4>Create Account?
+            <h4>Create account?
                 <span id="nav-to-signup">Click Here</span>
             </h4>
         </form>
     </div>
 
     <!-- signup form -->
-    <div class="login-signup">
+    <div class="login-signup" style="display: none;">
+        <img src="./assets/logo.png" alt="logo">
         <h2>Signup</h2>
         <form action="" id="signup">
             <div class="user-box">
@@ -56,15 +58,15 @@
                 <button type="submit" id="signup-submit">Signup</button>
                 <div class="loader"></div>
             </div>
-            <h4>Create Account?
+            <h4>Already have an account?
                 <span id="nav-to-signup">Click Here</span>
             </h4>
         </form>
     </div>
 
     <!-- dashboard -->
-    <div class="user-details">
-        <h1></h1>
+    <div class="user-details" style="display: none;">
+        <h1>Fahath</h1>
         <button id="logout">Logout</button>
     </div>
 
