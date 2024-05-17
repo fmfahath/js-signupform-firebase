@@ -1,6 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, setDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, setDoc, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyBrDDXuZrRWzN5DOOWn0v8sACq8-ElWNK0",
@@ -27,29 +27,36 @@ const forgotpwd = document.querySelector('#nav-to-forgotpwd');
 const details = document.querySelector(".user-details");
 const signupMessage = document.getElementById("signup-message");
 const loginMessage = document.getElementById("login-message");
+const detailsMessage = document.getElementById("details-message");
+const userInfo = document.getElementById("user-info");
 
 const userDetails = (currentUser) => {
     console.log(JSON.parse(currentUser));
 };
 
-function showAlert(element, message, status) {
+function showAlert(element, message, status, timer) {
     if (status === "success") {
         element.style.display = "block";
         element.classList.remove("error")
         element.classList.add("success")
         element.innerHTML = message;
-        setTimeout(() => {
-            element.style.display = "none";
-        }, 3000);
+
+        if (timer == true) {
+            setTimeout(() => {
+                element.style.display = "none";
+            }, 3000);
+        }
 
     } else {
         element.style.display = "block";
         element.classList.remove("success")
         element.classList.add("error")
         element.innerHTML = message;
-        setTimeout(() => {
-            element.style.display = "none";
-        }, 3000);
+        if (timer == true) {
+            setTimeout(() => {
+                element.style.display = "none";
+            }, 3000);
+        }
     }
 
 
@@ -162,14 +169,14 @@ login_submit.addEventListener('click', (e) => {
             const user = userCredencial.user;
             localStorage.setItem('LoggedInUserId', user.uid);
             loginForm.style.display = "none";
-            details.style.display = "block";
+            details.style.display = "flex";
         })
         .catch((error) => {
             const erroCode = error.code;
             if (erroCode === 'auth/invalid-credential')
-                showAlert(loginMessage, "Incorrect Email or Password", "error")
+                showAlert(loginMessage, "Incorrect Email or Password", "error", true)
             else {
-                showAlert(loginMessage, "Account Doesn't Exist", "error")
+                showAlert(loginMessage, "Account Doesn't Exist", "error", true)
 
             }
 
@@ -177,4 +184,34 @@ login_submit.addEventListener('click', (e) => {
             document.querySelectorAll('.loader')[0].style.display = "none";
         })
 
+
+    //getting User details to dashboard
+    onAuthStateChanged(auth, (user) => {
+        const LoggedInUserId = localStorage.getItem('loggedInUserId');
+        if (LoggedInUserId) {
+            const docRef = doc(db, "users", LoggedInUserId);
+            getDoc(docRef)
+                .then((docSnap) => {
+                    if (docSnap.exists()) {
+                        const userData = docSnap.data();
+
+                        document.getElementById("user-userName").innerHTML = userData.userName;
+                        document.getElementById("user-uid").innerHTML = userData.uid;
+                        document.getElementById("user-email").innerHTML = userData.email;
+                    }
+                    else {
+                        console.log("No Document Matched!")
+                        userInfo.style.display = "none";
+                        showAlert(detailsMessage, "No Document Matched!", "error", false);
+                    }
+                })
+        }
+        else {
+            console.log("Local Storage ID not Found!")
+            userInfo.style.display = "none";
+            showAlert(detailsMessage, "Local Storage ID not Found!", "error", false);
+        }
+    })
 })
+
+
