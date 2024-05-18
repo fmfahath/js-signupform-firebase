@@ -37,6 +37,7 @@ const resetEmailInput = document.getElementById('reset-email');
 const resetBtn = document.getElementById('reset-submit');
 const back_to_login = document.querySelector('#back-to-login');
 const resetMessage = document.getElementById("reset-message");
+const reset_submit = document.getElementById("reset-submit");
 
 
 
@@ -254,24 +255,26 @@ forgotPwd.addEventListener("click", (e) => {
 
     resetBtn.addEventListener("click", (e) => {
         const resetEmail = resetEmailInput.value;
-
+        reset_submit.style.display = 'none';
+        document.querySelectorAll('.loader')[2].style.display = "block";
         // password reset function
         sendPasswordResetEmail(auth, resetEmail)
             .then(() => {
-                console.log("email link send success");
+                // console.log("email link send success");
                 showAlert(resetMessage, "Rest Email Send Successfully!", "success");
 
                 setTimeout(() => {
                     document.getElementById('reset').reset();
                     resetForm.style.display = "none";
                     loginForm.style.display = "block";
-                }, 3000);
+                }, 2000);
 
             })
             .catch((error) => {
-                console.log(error);
+                // console.log(error);
                 showAlert(resetMessage, "Rest Email Send Error!", "error");
-
+                document.querySelectorAll('.loader')[2].style.display = "none";
+                reset_submit.style.display = 'block';
             })
 
     })
