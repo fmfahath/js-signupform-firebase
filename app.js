@@ -25,7 +25,6 @@ const nav_to_signup = document.querySelector('#nav-to-signup');
 const nav_to_login = document.querySelector('#nav-to-login');
 const login_submit = document.querySelector('#login-submit');
 const signup_submit = document.querySelector('#signup-submit');
-const forgotpwd = document.querySelector('#nav-to-forgotpwd');
 const details = document.querySelector(".user-details");
 const signupMessage = document.getElementById("signup-message");
 const loginMessage = document.getElementById("login-message");
@@ -41,34 +40,31 @@ const resetMessage = document.getElementById("reset-message");
 
 
 
-function showAlert(element, message, status, timer) {
+function showAlert(element, message, status) {
     if (status === "success") {
         element.style.display = "block";
         element.classList.remove("error")
         element.classList.add("success")
         element.innerHTML = message;
 
-        if (timer == true) {
-            setTimeout(() => {
-                element.style.display = "none";
-            }, 3000);
-        }
+
+        setTimeout(() => {
+            element.style.display = "none";
+        }, 3000);
+
 
     } else {
         element.style.display = "block";
         element.classList.remove("success")
         element.classList.add("error")
         element.innerHTML = message;
-        if (timer == true) {
-            setTimeout(() => {
-                element.style.display = "none";
-            }, 3000);
-        }
+
+        setTimeout(() => {
+            element.style.display = "none";
+        }, 3000);
+
     }
-
-
 }
-
 
 window.onload = () => {
 
@@ -114,7 +110,6 @@ signup_submit.addEventListener('click', (e) => {
                 userName: userName,
                 email: email,
             };
-
 
             showAlert(signupMessage, "Created Successfully", "success");
 
@@ -232,11 +227,11 @@ logoutBtn.addEventListener('click', async (e) => {
 const checkAuthState = async () => {
     onAuthStateChanged(auth, user => {
         if (user) {
-            console.log("loggedin");
+            // console.log("loggedin");
             details.style.display = "flex";
         }
         else {
-            console.log("no logged in profile");
+            // console.log("no logged in profile");
             loginForm.style.display = 'block';
         }
     })
