@@ -64,13 +64,8 @@ function showAlert(element, message, status, timer) {
 
 
 window.onload = () => {
-    if (sessionStorage.getItem('user-cred')) {
-        details.style.display = "flex";
-    }
-    else {
-        loginForm.style.display = 'block';
-    }
 
+    checkAuthState();
 };
 
 // create account link
@@ -211,8 +206,24 @@ login_submit.addEventListener('click', (e) => {
 
 
 //logout button
-logoutBtn.addEventListener('click', (e) => {
+logoutBtn.addEventListener('click', async (e) => {
+    await signOut(auth);
     sessionStorage.removeItem("user-cred");
     details.style.display = "none";
     loginForm.style.display = "block";
 });
+
+
+const checkAuthState = async () => {
+    onAuthStateChanged(auth, user => {
+        if (user) {
+            console.log("loggedin");
+            details.style.display = "flex";
+        }
+        else {
+            console.log("no logged in profile");
+            loginForm.style.display = 'block';
+        }
+    })
+}
+
