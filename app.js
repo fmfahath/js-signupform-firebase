@@ -68,7 +68,16 @@ function showAlert(element, message, status) {
 
 window.onload = () => {
 
-    checkAuthState();
+    // checkAuthState();
+
+    if (sessionStorage.getItem('user-cred')) {
+        console.log("loggedin");
+        details.style.display = "flex";
+    }
+    else {
+        // console.log("no logged in profile");
+        loginForm.style.display = 'block';
+    }
 };
 
 // create account link
@@ -224,18 +233,18 @@ logoutBtn.addEventListener('click', async (e) => {
 });
 
 
-const checkAuthState = async () => {
-    onAuthStateChanged(auth, user => {
-        if (user) {
-            // console.log("loggedin");
-            details.style.display = "flex";
-        }
-        else {
-            // console.log("no logged in profile");
-            loginForm.style.display = 'block';
-        }
-    })
-}
+// const checkAuthState = async () => {
+//     onAuthStateChanged(auth, user => {
+//         if (user) {
+//             console.log("loggedin");
+//             details.style.display = "flex";
+//         }
+//         else {
+//             // console.log("no logged in profile");
+//             loginForm.style.display = 'block';
+//         }
+//     })
+// }
 
 
 //forgot password
@@ -256,7 +265,7 @@ forgotPwd.addEventListener("click", (e) => {
                     document.getElementById('reset').reset();
                     resetForm.style.display = "none";
                     loginForm.style.display = "block";
-                }, 4000);
+                }, 3000);
 
             })
             .catch((error) => {
