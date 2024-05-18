@@ -64,8 +64,13 @@ function showAlert(element, message, status, timer) {
 
 
 window.onload = () => {
+    if (sessionStorage.getItem('user-cred')) {
+        details.style.display = "flex";
+    }
+    else {
+        loginForm.style.display = 'block';
+    }
 
-    loginForm.style.display = 'block';
 };
 
 // create account link
@@ -93,8 +98,8 @@ signup_submit.addEventListener('click', (e) => {
     const password = document.getElementById('signup-pwd').value;
 
     createUserWithEmailAndPassword(auth, email, password)
-        .then((useCredential) => {
-            const user = useCredential.user;
+        .then(async (userCredential) => {
+            const user = userCredential.user;
             const userData = {
                 userName: userName,
                 email: email,
@@ -104,7 +109,7 @@ signup_submit.addEventListener('click', (e) => {
             showAlert(signupMessage, "Created Successfully", "success");
 
             const docRef = doc(db, "users", user.uid);
-            setDoc(docRef, userData)
+            await setDoc(docRef, userData)
                 .then(() => {
 
                     signup_submit.style.display = 'block';
@@ -143,88 +148,51 @@ login_submit.addEventListener('click', (e) => {
     const password = document.getElementById('login-pwd').value;
 
     signInWithEmailAndPassword(auth, email, password)
-        .then((userCredencial) => {
-            // showAlert(loginMessage, "Logged In", "success");
-            const user = userCredencial.user;
-            localStorage.setItem('LoggedInUserId', user.uid);
+        .then(async (userCredencial) => {
+
             document.querySelectorAll('.loader')[0].style.display = "none";
             document.getElementById('login').reset();
             login_submit.style.display = 'block';
             loginForm.style.display = "none";
             details.style.display = "flex";
 
-            //getting User details to dashboard
-            onAuthStateChanged(auth, (user) => {
-                // const LoggedInUserId = localStorage.getItem('loggedInUserId');
-                // console.log("onAuth: ", LoggedInUserId);
-                // if (LoggedInUserId) {
-                //     const docRef = doc(db, "users", LoggedInUserId);
-                //     getDoc(docRef)
-                //         .then((docSnap) => {
-                //             if (docSnap.exists()) {
-                //                 const userData = docSnap.data();
+            const user = userCredencial.user;
+            const docRef = doc(db, "users", user.uid);
+            const docSnap = await getDoc(docRef);
 
-                //                 document.getElementById("user-userName").innerHTML = userData.userName;
-                //                 document.getElementById("user-uid").innerHTML = userData.uid;
-                //                 document.getElementById("user-email").innerHTML = userData.email;
-                //             }
-                //             else {
-                //                 console.log("No Document Matched!")
-                //                 userInfo.style.display = "none";
-                //                 showAlert(detailsMessage, "No Document Matched!", "error", false);
-                //             }
-                //         })
-                //         .catch((error) => {
-                //             const errorCode = error.code;
-                //             console.log("Error getting document: ", error);
-                //             showAlert(detailsMessage, "No Document Matched! : " + errorCode, "error", false);
+            //setting session data
+            if (docSnap.exists()) {
+                const userData = {
+                    uid: user.uid,
+                    userName: docSnap.data().userName,
+                    email: docSnap.data().email,
+                };
 
-                //         })
-                // }
-                // else {
-                //     console.log("Local Storage ID not Found!")
-                //     userInfo.style.display = "none";
-                //     showAlert(detailsMessage, "Local Storage ID not Found!", "error", false);
-                // }
+                sessionStorage.setItem("user-cred", JSON.stringify(userData));
 
 
-                // --------------------------------------------------------------------
+            }
+            else {
+                console.log("user logied In. But cannot create session data");
+                userInfo.style.display = "none";
+                showAlert(detailsMessage, "Cannot Create Session Data", "error");
+            }
 
-                console.log(user);
 
-                if (user) {
-                    const uid = user.uid;
-                    const docRef = doc(db, "users", uid);
+            // getting session Data
+            const sessionData = JSON.parse(sessionStorage.getItem("user-cred"));
 
-                    getDoc(docRef)
-                        .then((docSnap) => {
-                            if (docSnap.exists()) {
-                                const userData = docSnap.data();
+            if (sessionData) {
+                document.getElementById("user-userName").innerHTML = sessionData.userName;
+                document.getElementById("user-uid").innerHTML = sessionData.uid;
+                document.getElementById("user-email").innerHTML = sessionData.email;
+            }
+            else {
+                console.log("Cannot get session data");
+                userInfo.style.display = "none";
+                showAlert(detailsMessage, "Cannot get session data", "error");
+            }
 
-                                document.getElementById("user-userName").innerHTML = userData.userName;
-                                document.getElementById("user-uid").innerHTML = uid;
-                                document.getElementById("user-email").innerHTML = userData.email;
-                            }
-                            else {
-                                console.log("No Document Matched!")
-                                userInfo.style.display = "none";
-                                showAlert(detailsMessage, "No Document Matched!", "error", false);
-                            }
-                        })
-                        .catch((error) => {
-                            const errorCode = error.code;
-                            console.log("Error getting document: ", error);
-                            showAlert(detailsMessage, "No Document Matched! : " + errorCode, "error", false);
-
-                        })
-                }
-                else {
-                    console.log("User Not Logged In!")
-                    userInfo.style.display = "none";
-                    showAlert(detailsMessage, "User Not Logged In!", "error", false);
-                }
-
-            })
         })
         .catch((error) => {
             const erroCode = error.code;
@@ -239,22 +207,12 @@ login_submit.addEventListener('click', (e) => {
             document.querySelectorAll('.loader')[0].style.display = "none";
         })
 
-
-
-
 });
 
 
 //logout button
 logoutBtn.addEventListener('click', (e) => {
-    localStorage.removeItem("loggedInUserId");
-    signOut(auth)
-        .then(() => {
-            details.style.display = "none";
-            loginForm.style.display = "block";
-        })
-        .catch((error) => {
-            console.log(error.code)
-            showAlert(detailsMessage, "Log out Error", "error", false)
-        })
+    sessionStorage.removeItem("user-cred");
+    details.style.display = "none";
+    loginForm.style.display = "block";
 });
