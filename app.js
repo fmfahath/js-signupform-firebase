@@ -13,8 +13,10 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
+const auth = getAuth(app);
 const db = getFirestore();
+const user = auth.currentUser;
+
 
 
 const loginForm = document.querySelectorAll('.login-signup')[0];
@@ -31,9 +33,6 @@ const detailsMessage = document.getElementById("details-message");
 const userInfo = document.getElementById("user-info");
 const logoutBtn = document.getElementById("logout-btn");
 
-const userDetails = (currentUser) => {
-    console.log(JSON.parse(currentUser));
-};
 
 function showAlert(element, message, status, timer) {
     if (status === "success") {
@@ -66,28 +65,7 @@ function showAlert(element, message, status, timer) {
 
 window.onload = () => {
 
-    // localStorage.setItem('currently_loggedIn',
-    //     JSON.stringify({
-    //         userName: "abc",
-    //         email: "abc@gmail.com"
-    //     }))
-
-    try {
-        const currentUser = window.localStorage.getItem('currently_loggedIn');
-
-        if (currentUser === null) {
-            throw new Error('No current User');
-        }
-        else {
-            loginForm.style.display = 'none;'
-            signupForm.style.display = 'none;'
-            details.style.display = 'block';
-            userDetails(currentUser);
-        }
-    } catch (error) {
-        loginForm.style.display = 'block';
-
-    }
+    loginForm.style.display = 'block';
 };
 
 // create account link
@@ -174,6 +152,79 @@ login_submit.addEventListener('click', (e) => {
             login_submit.style.display = 'block';
             loginForm.style.display = "none";
             details.style.display = "flex";
+
+            //getting User details to dashboard
+            onAuthStateChanged(auth, (user) => {
+                // const LoggedInUserId = localStorage.getItem('loggedInUserId');
+                // console.log("onAuth: ", LoggedInUserId);
+                // if (LoggedInUserId) {
+                //     const docRef = doc(db, "users", LoggedInUserId);
+                //     getDoc(docRef)
+                //         .then((docSnap) => {
+                //             if (docSnap.exists()) {
+                //                 const userData = docSnap.data();
+
+                //                 document.getElementById("user-userName").innerHTML = userData.userName;
+                //                 document.getElementById("user-uid").innerHTML = userData.uid;
+                //                 document.getElementById("user-email").innerHTML = userData.email;
+                //             }
+                //             else {
+                //                 console.log("No Document Matched!")
+                //                 userInfo.style.display = "none";
+                //                 showAlert(detailsMessage, "No Document Matched!", "error", false);
+                //             }
+                //         })
+                //         .catch((error) => {
+                //             const errorCode = error.code;
+                //             console.log("Error getting document: ", error);
+                //             showAlert(detailsMessage, "No Document Matched! : " + errorCode, "error", false);
+
+                //         })
+                // }
+                // else {
+                //     console.log("Local Storage ID not Found!")
+                //     userInfo.style.display = "none";
+                //     showAlert(detailsMessage, "Local Storage ID not Found!", "error", false);
+                // }
+
+
+                // --------------------------------------------------------------------
+
+                console.log(user);
+
+                if (user) {
+                    const uid = user.uid;
+                    const docRef = doc(db, "users", uid);
+
+                    getDoc(docRef)
+                        .then((docSnap) => {
+                            if (docSnap.exists()) {
+                                const userData = docSnap.data();
+
+                                document.getElementById("user-userName").innerHTML = userData.userName;
+                                document.getElementById("user-uid").innerHTML = uid;
+                                document.getElementById("user-email").innerHTML = userData.email;
+                            }
+                            else {
+                                console.log("No Document Matched!")
+                                userInfo.style.display = "none";
+                                showAlert(detailsMessage, "No Document Matched!", "error", false);
+                            }
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            console.log("Error getting document: ", error);
+                            showAlert(detailsMessage, "No Document Matched! : " + errorCode, "error", false);
+
+                        })
+                }
+                else {
+                    console.log("User Not Logged In!")
+                    userInfo.style.display = "none";
+                    showAlert(detailsMessage, "User Not Logged In!", "error", false);
+                }
+
+            })
         })
         .catch((error) => {
             const erroCode = error.code;
@@ -189,34 +240,9 @@ login_submit.addEventListener('click', (e) => {
         })
 
 
-    //getting User details to dashboard
-    onAuthStateChanged(auth, (user) => {
-        const LoggedInUserId = localStorage.getItem('loggedInUserId');
-        if (LoggedInUserId) {
-            const docRef = doc(db, "users", LoggedInUserId);
-            getDoc(docRef)
-                .then((docSnap) => {
-                    if (docSnap.exists()) {
-                        const userData = docSnap.data();
 
-                        document.getElementById("user-userName").innerHTML = userData.userName;
-                        document.getElementById("user-uid").innerHTML = userData.uid;
-                        document.getElementById("user-email").innerHTML = userData.email;
-                    }
-                    else {
-                        console.log("No Document Matched!")
-                        userInfo.style.display = "none";
-                        showAlert(detailsMessage, "No Document Matched!", "error", false);
-                    }
-                })
-        }
-        else {
-            console.log("Local Storage ID not Found!")
-            userInfo.style.display = "none";
-            showAlert(detailsMessage, "Local Storage ID not Found!", "error", false);
-        }
-    })
-})
+
+});
 
 
 //logout button
@@ -231,4 +257,4 @@ logoutBtn.addEventListener('click', (e) => {
             console.log(error.code)
             showAlert(detailsMessage, "Log out Error", "error", false)
         })
-})
+});
