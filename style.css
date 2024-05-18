@@ -197,7 +197,7 @@ body {
 
 .success {
     color: rgb(6, 143, 6);
-    font-weight: 700;
+    font-weight: 500;
     font-size: 14px;
     text-align: center;
     margin-top: 20px;
@@ -205,8 +205,24 @@ body {
 
 .error {
     color: rgb(255, 0, 0);
-    font-weight: 700;
+    font-weight: 500;
     font-size: 14px;
     text-align: center;
     margin-top: 20px;
+}
+
+#reset input::placeholder {
+    color: #727272ab;
+}
+
+#reset button {
+    width: 50%;
+}
+
+.popup {
+    width: 50%;
+    margin: 10px auto;
+    background-color: #ffffff96;
+    border-radius: 10px;
+    transition: 0.3s;
 }

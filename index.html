@@ -15,6 +15,9 @@
     <div class="login-signup">
         <img src="./assets/logo.png" alt="logo">
         <h2>Login</h2>
+        <div class="popup">
+            <p id="login-message" class="success" style="display: none;"></p>
+        </div>
         <form action="" id="login">
             <div class="user-box">
                 <input type="email" id="login-email" autocomplete="off" required>
@@ -25,9 +28,7 @@
                 <label for="login-pwd">Password</label>
             </div>
             <div class="forgot-pwd">
-                <h4 id="nav-to-forgotpwd">Forgot password?
-                    <!-- <span id="nav-to-reset">Click Here</span> -->
-                </h4>
+                <h4 id="nav-to-forgotpwd">Forgot password?</h4>
             </div>
             <div class="btn">
                 <button type="submit" id="login-submit">Login</button>
@@ -37,9 +38,7 @@
                 <span id="nav-to-signup">Click Here</span>
             </h4>
         </form>
-        <div>
-            <p id="login-message" class="success" style="display: none;"></p>
-        </div>
+
 
     </div>
 
@@ -47,6 +46,9 @@
     <div class="login-signup">
         <img src="./assets/logo.png" alt="logo">
         <h2>Signup</h2>
+        <div class="popup">
+            <p id="signup-message" class="success" style="display: none;"></p>
+        </div>
         <form action="" id="signup">
             <div class="user-box">
                 <input type="text" id="signup-username" autocomplete="off" required>
@@ -68,11 +70,32 @@
                 <span id="nav-to-login">Click Here</span>
             </h4>
         </form>
-        <div>
-            <p id="signup-message" class="success" style="display: none;"></p>
-        </div>
+
 
     </div>
+
+    <!-- forgot password  -->
+    <div class="login-signup">
+        <img src="./assets/logo.png" alt="logo">
+        <h2>Reset Password</h2>
+        <div class="popup">
+            <p id="reset-message" class="success" style="display: none;"></p>
+        </div>
+        <form action="" id="reset">
+            <div class="user-box">
+                <input type="email" id="reset-email" autocomplete="off" placeholder="Enter Your Email" required>
+            </div>
+            <div class="btn">
+                <button type="button" id="reset-submit">Send Reset Email</button>
+                <div class="loader"></div>
+            </div>
+            <h4>Back to Loing?
+                <span id="back-to-login">Click Here</span>
+            </h4>
+        </form>
+
+    </div>
+
 
     <!-- dashboard -->
     <div class="user-details" style="display: none;">
@@ -82,7 +105,7 @@
                 <p>User ID: <span id="user-uid">-</span></p>
                 <p>User Email: <span id="user-email">-</span></p>
             </div>
-            <div>
+            <div class="popup">
                 <p id="details-message" class="success" style="display: none;"></p>
             </div>
         </div>

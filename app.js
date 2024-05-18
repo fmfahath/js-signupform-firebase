@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 import { getFirestore, setDoc, getDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -32,6 +32,13 @@ const loginMessage = document.getElementById("login-message");
 const detailsMessage = document.getElementById("details-message");
 const userInfo = document.getElementById("user-info");
 const logoutBtn = document.getElementById("logout-btn");
+const forgotPwd = document.getElementById("nav-to-forgotpwd");
+const resetForm = document.querySelectorAll('.login-signup')[2];
+const resetEmailInput = document.getElementById('reset-email');
+const resetBtn = document.getElementById('reset-submit');
+const back_to_login = document.querySelector('#back-to-login');
+const resetMessage = document.getElementById("reset-message");
+
 
 
 function showAlert(element, message, status, timer) {
@@ -77,6 +84,14 @@ nav_to_signup.addEventListener('click', () => {
 
 // already have an account link
 nav_to_login.addEventListener('click', () => {
+    loginForm.style.display = 'block';
+    signupForm.style.display = 'none';
+    document.querySelector('#signup').reset();
+});
+
+// Back to login link
+back_to_login.addEventListener('click', () => {
+    resetForm.style.display = 'none'
     loginForm.style.display = 'block';
     signupForm.style.display = 'none';
     document.querySelector('#signup').reset();
@@ -226,4 +241,40 @@ const checkAuthState = async () => {
         }
     })
 }
+
+
+//forgot password
+forgotPwd.addEventListener("click", (e) => {
+    loginForm.style.display = "none";
+    resetForm.style.display = "block";
+
+    resetBtn.addEventListener("click", (e) => {
+        const resetEmail = resetEmailInput.value;
+
+        // password reset function
+        sendPasswordResetEmail(auth, resetEmail)
+            .then(() => {
+                console.log("email link send success");
+                showAlert(resetMessage, "Rest Email Send Successfully!", "success");
+
+                setTimeout(() => {
+                    document.getElementById('reset').reset();
+                    resetForm.style.display = "none";
+                    loginForm.style.display = "block";
+                }, 4000);
+
+            })
+            .catch((error) => {
+                console.log(error);
+                showAlert(resetMessage, "Rest Email Send Error!", "error");
+
+            })
+
+    })
+})
+
+
+
+
+
 
